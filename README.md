@@ -98,9 +98,8 @@ Time-series skill demand analysis with additive measures.
 
 ### Priority Mart
 
-Priority role tracking with incremental updates using MERGE operations.
+Priority role tracking.
 
-![Priority Mart Schema](/Resources/images/Screenshot_2026-05-07_222019.png)
 
 - **SQL Files:**
   - [`05_create_priority_mart.sql`](./05_create_priority_mart.sql) – Initial build of priority roles and jobs snapshot
