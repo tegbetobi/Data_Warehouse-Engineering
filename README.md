@@ -103,7 +103,7 @@ Priority role tracking.
 
 - **SQL Files:**
   - [`05_create_priority_mart.sql`](./05_create_priority_mart.sql) – Initial build of priority roles and jobs snapshot
-- **Purpose:** Track priority roles and job snapshots with incremental update capabilities
+- **Purpose:** Track priority roles and job snapshots
 - **Grain:** One row per job posting with priority level assignment
 
 ---
