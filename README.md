@@ -50,8 +50,6 @@ Raw job posting data arrives as flat CSV files in Google Cloud Storage—not str
 ├── 03_create_flat_mart.sql        # Denormalized flat mart
 ├── 04_create_skills_mart.sql      # Skills demand mart
 ├── 05_create_priority_mart.sql    # Priority roles mart
-├── 06_update_priority_mart.sql    # Priority mart incremental update (MERGE)
-├── 07_create_company_mart.sql     # Company hiring mart (optional)
 ├── build_dw_marts.sql             # Master SQL build script
 └── README.md                       # You are here
 ```
@@ -106,10 +104,8 @@ Priority role tracking with incremental updates using MERGE operations.
 
 - **SQL Files:**
   - [`05_create_priority_mart.sql`](./05_create_priority_mart.sql) – Initial build of priority roles and jobs snapshot
-  - [`06_update_priority_mart.sql`](./06_update_priority_mart.sql) – **Incremental update using MERGE** (upsert pattern)
 - **Purpose:** Track priority roles and job snapshots with incremental update capabilities
 - **Grain:** One row per job posting with priority level assignment
-- **Key Features:** **MERGE operations for incremental updates** - demonstrates production-ready upsert patterns (INSERT, UPDATE, DELETE in single statement)
 
 ---
 
@@ -120,7 +116,6 @@ Priority role tracking with incremental updates using MERGE operations.
 - **Extract:** Direct CSV loading from Google Cloud Storage using DuckDB's `httpfs` extension  
 - **Transform:** Data normalization, type conversion (`CAST`, `DATE_TRUNC`), and quality filtering  
 - **Load:** Idempotent table creation with `DROP TABLE IF EXISTS` patterns  
-- **Incremental Updates:** MERGE operations for upsert patterns (INSERT, UPDATE, DELETE in single statement)  
 - **Orchestration:** Master SQL script (`build_dw_marts.sql`) for automated pipeline execution  
 
 ### Dimensional Modeling
@@ -136,8 +131,7 @@ Priority role tracking with incremental updates using MERGE operations.
 ### SQL Advanced Techniques
 
 - **DDL Operations:** `CREATE TABLE`, `DROP TABLE`, `CREATE SCHEMA` for schema management  
-- **DML Operations:** `INSERT INTO ... SELECT` with explicit column mapping from CSV sources  
-- **MERGE Operations:** Incremental updates using `MERGE INTO` with `WHEN MATCHED`, `WHEN NOT MATCHED`, and `WHEN NOT MATCHED BY SOURCE` clauses for production-ready upsert patterns  
+- **DML Operations:** `INSERT INTO ... SELECT` with explicit column mapping from CSV sources   
 - **CTEs:** Common Table Expressions for complex transformations and boolean flag conversions  
 - **Date Functions:** `DATE_TRUNC('month')`, `EXTRACT(quarter)` for temporal dimension creation  
 - **String Functions:** `STRING_AGG` for concatenation, `REPLACE` for data cleaning  
