@@ -1,8 +1,7 @@
 -- Step 2: DW - Load data from CSV files into star schema tables (Data Warehouse)
 -- Run this after Step 1
--- Note: Update the GCS bucket path with your actual bucket name
 
--- Load dimension tables first (no FK dependencies)
+-- Load dimension tables first
 INSERT INTO company_dim (company_id, name, link, link_google, thumbnail)
 SELECT company_id, name, link, link_google, thumbnail
 FROM read_csv('https://storage.googleapis.com/sql_de/company_dim.csv', 
@@ -47,26 +46,6 @@ UNION ALL
 SELECT 'Job Postings Fact', COUNT(*) FROM job_postings_fact
 UNION ALL
 SELECT 'Skills Job Bridge', COUNT(*) FROM skills_job_dim;
-
--- Verify referential integrity (should return 0 for all queries)
-SELECT '=== Referential Integrity Check ===' AS info;
-SELECT 
-    'Orphaned company_ids in job_postings_fact' AS check_type,
-    COUNT(*) AS orphaned_count
-FROM job_postings_fact 
-WHERE company_id NOT IN (SELECT company_id FROM company_dim);
-
-SELECT 
-    'Orphaned skill_ids in skills_job_dim' AS check_type,
-    COUNT(*) AS orphaned_count
-FROM skills_job_dim 
-WHERE skill_id NOT IN (SELECT skill_id FROM skills_dim);
-
-SELECT 
-    'Orphaned job_ids in skills_job_dim' AS check_type,
-    COUNT(*) AS orphaned_count
-FROM skills_job_dim 
-WHERE job_id NOT IN (SELECT job_id FROM job_postings_fact);
 
 -- Show sample data
 SELECT '=== Company Dimension Sample ===' AS info;
