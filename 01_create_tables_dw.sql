@@ -1,5 +1,4 @@
 -- Step 1: DW - Create star schema tables (Data Warehouse)
--- Run this first
 
 -- Set up initial configurations
 PRAGMA enable_progress_bar;
