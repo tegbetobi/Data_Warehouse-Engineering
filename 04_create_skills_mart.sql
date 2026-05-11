@@ -1,5 +1,3 @@
--- Step 4: Mart - Create skills demand mart (dimensional mart)
--- Run this after Step 3
 -- This mart focuses on skills demand over time with clean additive measures
 
 -- Drop existing mart schema if it exists (for idempotency)
@@ -56,8 +54,7 @@ FROM job_postings_fact
 WHERE job_posted_date IS NOT NULL;
 
 -- Step 3: Create fact table - fact_skill_demand_monthly
--- Grain: skill_id + month_start_date + job_title_short
--- All measures are additive (counts and sums) - safe to re-aggregate
+-- All measures are additive (counts and sums) 
 CREATE TABLE skills_mart.fact_skill_demand_monthly (
     skill_id INTEGER,
     month_start_date DATE,
@@ -129,25 +126,3 @@ SELECT * FROM skills_mart.dim_skill LIMIT 10;
 
 SELECT '=== Date Month Dimension Sample ===' AS info;
 SELECT * FROM skills_mart.dim_date_month ORDER BY month_start_date DESC LIMIT 10;
-
-SELECT '=== Skill Demand Fact Sample ===' AS info;
-SELECT 
-    fdsm.skill_id,
-    ds.skills,
-    ds.type AS skill_type,
-    fdsm.job_title_short,
-    fdsm.month_start_date,
-    fdsm.postings_count,
-    fdsm.remote_postings_count,
-    fdsm.health_insurance_postings_count,
-    fdsm.no_degree_mention_count,
-    -- Calculate derived metrics (ratios) from additive measures
-    CASE 
-        WHEN fdsm.postings_count > 0 
-        THEN fdsm.remote_postings_count::DOUBLE / fdsm.postings_count 
-        ELSE 0.0 
-    END AS remote_share
-FROM skills_mart.fact_skill_demand_monthly fdsm
-JOIN skills_mart.dim_skill ds ON fdsm.skill_id = ds.skill_id
-ORDER BY fdsm.postings_count DESC, fdsm.month_start_date DESC
-LIMIT 10;
