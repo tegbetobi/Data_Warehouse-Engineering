@@ -88,7 +88,7 @@ WITH job_postings_prepared AS (
         CASE WHEN jp.job_no_degree_mention = TRUE THEN 1 ELSE 0 END AS no_degree_mention
     FROM
         job_postings_fact jp
-    INNER JOIN
+    LEFT JOIN
         skills_job_dim sj
         ON jp.job_id = sj.job_id
     WHERE
