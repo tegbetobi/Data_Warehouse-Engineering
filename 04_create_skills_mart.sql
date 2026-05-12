@@ -89,7 +89,7 @@ WITH job_postings_prepared AS (
     FROM
         job_postings_fact AS jp
     LEFT JOIN
-        skills_job_dim sj
+        skills_job_dim AS sj
         ON jp.job_id = sj.job_id
     WHERE
         jp.job_posted_date IS NOT NULL
