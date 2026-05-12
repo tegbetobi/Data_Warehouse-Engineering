@@ -11,7 +11,7 @@ An end-to-end data engineering pipeline that transforms raw CSV files from Googl
 - ✅ **Pipeline scope:** Built a complete **ETL pipeline** from raw CSVs to star schema warehouse to analytical marts  
 - ✅ **Data modeling:** Designed a **star schema** with fact tables, dimensions, and bridge tables for many-to-many relationships  
 - ✅ **ETL development:** Implemented **extract, transform, load** processes with idempotent operations and data quality checks  
-- ✅ **Mart architecture:** Created **specialized data marts** (flat, skills, priority) with additive measures and incremental update patterns
+- ✅ **Mart architecture:** Created **specialized data marts** (flat, skills) with additive measures
 
 ---
 
@@ -25,7 +25,7 @@ Raw job posting data arrives as flat CSV files in Google Cloud Storage—not str
 
 **Challenge:** Data teams need a single source of truth system—a data warehouse—to enable consistent, reliable analysis across the organization. Additionally, specialized data marts are required to optimize resources by pre-aggregating data for specific business use cases, reducing query complexity and improving performance for common analytical patterns.
 
-**Solution:** End-to-end ETL pipeline that extracts CSVs from cloud storage, normalizes them into a star schema warehouse (separating facts from dimensions), and creates specialized data marts optimized for specific use cases (flat queries, skill demand analysis, priority role tracking).  
+**Solution:** End-to-end ETL pipeline that extracts CSVs from cloud storage, normalizes them into a star schema warehouse (separating facts from dimensions), and creates specialized data marts optimized for specific use cases (flat queries, skill demand analysis).  
 
 ---
 
@@ -49,7 +49,6 @@ Raw job posting data arrives as flat CSV files in Google Cloud Storage—not str
 ├── 02_load_schema_dw.sql          # GCS data extraction & loading
 ├── 03_create_flat_mart.sql        # Denormalized flat mart
 ├── 04_create_skills_mart.sql      # Skills demand mart
-├── 05_create_priority_mart.sql    # Priority roles mart
 ├── build_dw_marts.sql             # Master SQL build script
 └── README.md                       # You are here
 ```
@@ -96,16 +95,6 @@ Time-series skill demand analysis with additive measures.
 - **Grain:** `skill_id + month_start_date + job_title_short`
 - **Key Features:** All measures are additive (counts/sums) for safe re-aggregation
 
-### Priority Mart
-
-Priority role tracking.
-
-
-- **SQL Files:**
-  - [`05_create_priority_mart.sql`](./05_create_priority_mart.sql) – Initial build of priority roles and jobs snapshot
-- **Purpose:** Track priority roles and job snapshots
-- **Grain:** One row per job posting with priority level assignment
-
 ---
 
 ## 💻 Data Engineering Skills Demonstrated
@@ -123,8 +112,6 @@ Priority role tracking.
 - **Bridge Tables:** Many-to-many relationship handling (`skills_job_dim`, `bridge_company_location`, `bridge_job_title`)  
 - **Grain Definition:** Proper fact table granularity (skill+month, company+title+location+month)  
 - **Additive Measures:** Counts and sums that can be safely re-aggregated at any level  
-- **Surrogate Keys:** Sequential ID generation using CTEs with self-joins (optional company_mart build only)  
-
 
 
 ### SQL Advanced Techniques
@@ -133,7 +120,6 @@ Priority role tracking.
 - **DML Operations:** `INSERT INTO ... SELECT` with explicit column mapping from CSV sources   
 - **CTEs:** Common Table Expressions for complex transformations and boolean flag conversions  
 - **Date Functions:** `DATE_TRUNC('month')`, `EXTRACT(quarter)` for temporal dimension creation  
-- **String Functions:** `STRING_AGG` for concatenation, `REPLACE` for data cleaning  
 - **Boolean Logic:** `CASE WHEN` conversions for aggregating flags (remote, health insurance, no degree)  
 
 ### Data Quality & Production Practices
@@ -141,5 +127,5 @@ Priority role tracking.
 - **Idempotency:** All scripts safely rerunnable without side effects  
 - **Data Validation:** Verification queries at each pipeline step to ensure data integrity  
 - **Type Safety:** Proper data type definitions (`VARCHAR`, `INTEGER`, `DOUBLE`, `BOOLEAN`, `TIMESTAMP`)  
-- **Schema Organization:** Separate schemas (`flat_mart`, `skills_mart`, `priority_mart`, `company_mart`) for logical separation  
+- **Schema Organization:** Separate schemas (`flat_mart`, `skills_mart`) for logical separation  
 - **Error Handling:** Structured script execution with clear error messages and progress reporting  
